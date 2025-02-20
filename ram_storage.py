@@ -5,18 +5,25 @@ from uuid import uuid4
 
 class RamStorage:
     def __init__(self):
-        self.storage_dir = "/storage"
+        self.storage_dir = "storage"
         self.data = {}
+        self.data_file = os.path.join(self.storage_dir, 'data.json')
         self._load_data()
 
     def _load_data(self):
-        if os.path.exists(self.storage_dir):
+        if not os.path.exists(self.storage_dir):
             os.makedirs(self.storage_dir)
 
-        self.data_file = os.path.join(self.storage_dir, 'data.json')
+        if not os.path.exists(self.data_file):
+            print('yes')
+            print(self.data_file)
+            with open(self.data_file, 'w') as file:
+                json.dump({}, file)
+
         if os.path.exists(self.data_file):
             with open(self.data_file, 'r') as df:
                 self.data = json.load(df)
+
 
     def _save_data(self):
         with open(self.data_file, 'w') as df:
@@ -36,7 +43,7 @@ class RamStorage:
     def get_task(self, task_id):
         return self.data.get(task_id)
 
-    def upd_task(self, task_id, status=None, log=None, result=None):
+    def update_task(self, task_id, status=None, log=None, result=None):
         if task_id in self.data:
             if status:
                 self.data[task_id]["status"] = status
