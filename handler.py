@@ -1,6 +1,10 @@
+import json
 from http.server import BaseHTTPRequestHandler
 from http import HTTPStatus
-from urllib.parse import urlparse, parse_qs
+from json import JSONDecodeError
+
+from errors import TaskNotFoundError, handle_error, QueryNotFoundError
+from response import make_response, send_response
 
 
 class RequestHandler(BaseHTTPRequestHandler):
@@ -10,18 +14,53 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     # query sample: curl -X GET -d "action=status&task_id=777" http://localhost:8080/
     def do_GET(self):
+        print('GET')
 
-        parsed_url = urlparse(self.path)
-        query_params = parse_qs(parsed_url.query)
+        try:
+            http_query = self.path.split('/')
+            task_id = http_query[-1]
+            query_type = http_query[-2]
 
-        action = query_params.get('action', [None])[0]
-        task_id = query_params.get('task_id', [None])[0]
+            task = self.db.get_task(task_id)
+            if not task:
+                raise TaskNotFoundError(f"No Task:[{task_id}] Found")
 
-        if action in ('status', 'result'):
-            self.send_response(HTTPStatus.OK)
+            if query_type == "status":
+                response_data = make_response({
+                    "task_id": task_id,
+                    "task_status": task["status"],
+                    "task_log": task["log"],
+                    "task_result": task["result"]
+                })
+            elif query_type == "result":
+                response_data = make_response({
+                    "task_result": task["result"]
+                })
+            else:
+                raise QueryNotFoundError(f"No Query:[{query_type}] Found")
 
+            if response_data:
+                send_response(self, HTTPStatus.OK, response_data)
 
-        else:
-            self.send_response(HTTPStatus.BAD_REQUEST)
+        except Exception as err:
+            handle_error(self, err)
 
+    def do_POST(self):
+        print('POST')
+        try:
+            content_len = int(self.headers["Content-Length"])
+            post_data = self.rfile.read(content_len).decode("utf-8")
 
+            task_data = json.loads(post_data)
+            task_id = self.db.create_task(task_data)
+
+            response_data = make_response({
+                "task_id": task_id,
+                "status": "Task created successfully"
+            })
+            send_response(self, HTTPStatus.CREATED, response_data)
+
+        except JSONDecodeError:
+            handle_error(self, ValueError("Invalid JSON data"))
+        except Exception as err:
+            handle_error(self, err)
