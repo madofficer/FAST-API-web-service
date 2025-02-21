@@ -1,5 +1,5 @@
 from http.server import HTTPServer
-from ram_storage import RamStorage
+from repository.ram_storage import RamStorage
 
 
 class Server(HTTPServer):

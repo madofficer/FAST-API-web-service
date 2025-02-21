@@ -1,0 +1,80 @@
+{
+    "fe63a2ed-f218-47c6-998a-d7030df1ec98": {
+        "status": "pending",
+        "data": {
+            "description": "Process data"
+        },
+        "log": [],
+        "result": null
+    },
+    "d3a2d73e-e492-4cdd-9304-7412fcc7be9e": {
+        "name": "",
+        "status": "pending",
+        "data": {
+            "taska": "sleep"
+        },
+        "log": [],
+        "result": null
+    },
+    "c8f3f585-703e-427e-9151-87a15e5828e0": {
+        "name": "",
+        "status": "pending",
+        "data": {
+            "taska": "sleep"
+        },
+        "log": [],
+        "result": null
+    },
+    "e98374fe-beaf-40cc-8e73-3ae9caa3113b": {
+        "name": "",
+        "status": "pending",
+        "data": {
+            "taska": "sleep"
+        },
+        "log": [],
+        "result": null
+    },
+    "e2b10763-abf3-4765-aeb0-d39b2ef7cbdc": {
+        "name": "",
+        "status": "pending",
+        "data": {
+            "taska": "sleep"
+        },
+        "log": [],
+        "result": null
+    },
+    "7f0a2312-2535-4f8b-9d20-8ee984eaba97": {
+        "name": "",
+        "status": "completed",
+        "data": {
+            "taska": "sleep"
+        },
+        "log": [
+            "Task started at 17:09:30",
+            "iter 1 done",
+            "iter 2 done",
+            "iter 3 done",
+            "iter 4 done",
+            "iter 5 done",
+            "Task done successfully at 17:09:45"
+        ],
+        "result": "ZOV"
+    },
+    "abee10df-c97d-4465-86bb-a892e55ac86d": {
+        "name": "",
+        "status": "completed",
+        "data": {
+            "pudge": "1000+7"
+        },
+        "log": [
+            "Task started at 17:35:31",
+            "iter 1 done",
+            "iter 2 done",
+            "iter 3 done",
+            "iter 4 done",
+            "iter 5 done",
+            "Task done successfully at 17:35:46"
+        ],
+        "result": "ZOV"
+    }
+}

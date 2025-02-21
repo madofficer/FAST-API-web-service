@@ -5,7 +5,7 @@ from uuid import uuid4
 
 class RamStorage:
     def __init__(self):
-        self.storage_dir = "storage"
+        self.storage_dir = "repository"
         self.data = {}
         self.data_file = os.path.join(self.storage_dir, 'data.json')
         self._load_data()
@@ -16,13 +16,11 @@ class RamStorage:
 
         if not os.path.exists(self.data_file):
             print(self.data_file)
-            with open(self.data_file, 'w') as file:
-                json.dump({}, file)
-
-        if os.path.exists(self.data_file):
+            with open(self.data_file, 'w') as df:
+                json.dump({}, df)
+        else:
             with open(self.data_file, 'r') as df:
                 self.data = json.load(df)
-
 
     def _save_data(self):
         with open(self.data_file, 'w') as df:
@@ -32,7 +30,7 @@ class RamStorage:
         task_id = str(uuid4())
         self.data[task_id] = {
             "name": "",
-            "status" : "pending",
+            "status": "pending",
             "data": task_data,
             "log": [],
             "result": None
