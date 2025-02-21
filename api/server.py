@@ -1,19 +1,19 @@
 from http.server import HTTPServer
 
 from api.handler import RequestHandler
-from domain.interfaces import TaskRepository
+from repository.task_repository import TaskRepositoryIml
 
 
 class Server(HTTPServer):
     def __init__(self, server_addr, request_handler):
-        self.task_repository = TaskRepository()
+        self.task_repository = TaskRepositoryIml()
         def handler(*args, **kwargs):
             return request_handler(
                 self.task_repository,
                 *args,
                 **kwargs
             )
-        super().__init__(server_addr, request_handler)
+        super().__init__(server_addr, handler)
 
 def run_server(host, port):
     server_address = (host, port)
