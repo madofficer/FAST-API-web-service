@@ -1,31 +1,34 @@
 from time import localtime, strftime, sleep
 import threading
 
+from domain.interfaces import TaskRepository
 
-class Worker:
-    def __init__(self, db, task_id):
-        self.db = db
+
+class TaskWorker:
+    def __init__(self, task_repository: TaskRepository, task_id: str):
+        self.task_repository = task_repository
         self.task_id = task_id
 
     def run(self):
-        self.db.update_task(
-            self.task_id,
-            status='running',
-            log=f'Task started at {strftime("%H:%M:%S", localtime())}'
-        )
+        task = self.task_repository.get_task(self.task_id)
+        if not task:
+            return
+
+        task.status = "running"
+        task.log.append(f"Execution started at {strftime("%H:%M:%S", localtime())}")
 
         for i in range(1, 6):
             sleep(3)
-            self.db.update_task(self.task_id, log=f'iter {i} done')
+            task.log.append(f"iter {i} running")
+            self.task_repository.update_task(task)
 
-        self.db.update_task(
-            self.task_id,
-            status='completed',
-            log=f'Task done successfully at {strftime("%H:%M:%S", localtime())}',
-            result='ZOV'
-        )
 
-def start_task(db, task_id):
-    worker = Worker(db, task_id)
+        task.status = "Completed"
+        task.result = "panda"
+        self.task_repository.update_task(task)
+
+
+def start_task(task_repository: TaskRepository, task_id: str):
+    worker = TaskWorker(task_repository, task_id)
     thread = threading.Thread(target=worker.run)
     thread.start()
