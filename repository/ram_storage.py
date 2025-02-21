@@ -5,7 +5,7 @@ from uuid import uuid4
 
 class RamStorage:
     def __init__(self):
-        self.storage_dir = "repository"
+        self.storage_dir = ""
         self.data = {}
         self.data_file = os.path.join(self.storage_dir, 'data.json')
         self._load_data()

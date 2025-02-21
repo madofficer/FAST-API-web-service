@@ -2,19 +2,24 @@ from http import HTTPStatus
 
 from response import send_response
 
-
-class TaskNotFoundError(Exception):
+class BaseTaskError(Exception):
     pass
 
-class QueryNotFoundError(Exception):
+class TaskNotFoundError(BaseTaskError):
     pass
 
-class InvalidTaskIDError(Exception):
+class QueryNotFoundError(BaseTaskError):
+    pass
+
+class InvalidTaskDataError(BaseTaskError):
+    pass
+
+class InvalidTaskIDError(BaseTaskError):
     pass
 
 def handle_error(handler, error):
 
-    if isinstance(error, (TaskNotFoundError, InvalidTaskIDError, QueryNotFoundError)):
+    if isinstance(error, BaseTaskError):
         status_code = HTTPStatus.NOT_FOUND
         response_data = {
             "status": "error",
