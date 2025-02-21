@@ -15,7 +15,6 @@ class RamStorage:
             os.makedirs(self.storage_dir)
 
         if not os.path.exists(self.data_file):
-            print('yes')
             print(self.data_file)
             with open(self.data_file, 'w') as file:
                 json.dump({}, file)
@@ -32,6 +31,7 @@ class RamStorage:
     def create_task(self, task_data):
         task_id = str(uuid4())
         self.data[task_id] = {
+            "name": "",
             "status" : "pending",
             "data": task_data,
             "log": [],
@@ -39,6 +39,7 @@ class RamStorage:
         }
 
         self._save_data()
+        return task_id
 
     def get_task(self, task_id):
         return self.data.get(task_id)
@@ -51,3 +52,4 @@ class RamStorage:
                 self.data[task_id]["log"].append(log)
             if result:
                 self.data[task_id]["result"] = result
+        self._save_data()

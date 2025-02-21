@@ -5,6 +5,7 @@ from json import JSONDecodeError
 
 from errors import TaskNotFoundError, handle_error, QueryNotFoundError
 from response import make_response, send_response
+from worker import start_task
 
 
 class RequestHandler(BaseHTTPRequestHandler):
@@ -59,6 +60,7 @@ class RequestHandler(BaseHTTPRequestHandler):
                 "status": "Task created successfully"
             })
             send_response(self, HTTPStatus.CREATED, response_data)
+            start_task(self.db, task_id)
 
         except JSONDecodeError:
             handle_error(self, ValueError("Invalid JSON data"))
