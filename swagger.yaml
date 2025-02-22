@@ -1,0 +1,67 @@
+swagger: "2.0"
+info:
+  title: Task API
+  description: Task API to interact with eternities (tasks)
+  version: 1.0.0
+host: 'localhost'
+schemes:
+  - http
+paths:
+  /tasks:
+    post:
+      summary: Create eternity (Task)
+      description: Creat task and starts execution
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: body
+          description: Task description
+          required: true
+          schema:
+            type: object
+            properties:
+              description:
+                type: string
+            required:
+              - description
+      responses:
+        201:
+          description: Eternity created
+          schema:
+            type: object
+            properties:
+              task_id:
+                type: string
+              message:
+                type: string
+  /tasks/{task_id}:
+    get:
+      summary: Get status with logs
+      description: Returns status by uuid
+      produces:
+        - application/json
+      parameters:
+        - name: task_id
+          in: path
+          required: true
+          type: string
+      responses:
+        200:
+          description: Task status
+          schema:
+            type: object
+            properties:
+              task_id:
+                type: string
+              status:
+                type: string
+              log:
+                type: array
+              result:
+                type: string
+        400:
+          description: Task not found
+    
