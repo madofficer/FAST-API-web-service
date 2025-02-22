@@ -1,15 +1,16 @@
 from dataclasses import dataclass
 from typing import List, Optional
 
+
 @dataclass
 class Task:
     """
     Task Entity
     """
+
     id: str
-    name: str
     description: str
-    status: str
+    status: str = "pending"
     log: List[str] = None
     result: Optional[str] = None
 

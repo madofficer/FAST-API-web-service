@@ -7,7 +7,7 @@ class RamStorage:
     def __init__(self):
         self.storage_dir = ""
         self.data = {}
-        self.data_file = os.path.join(self.storage_dir, 'data.json')
+        self.data_file = os.path.join(self.storage_dir, "data.json")
         self._load_data()
 
     def _load_data(self):
@@ -16,14 +16,14 @@ class RamStorage:
 
         if not os.path.exists(self.data_file):
             print(self.data_file)
-            with open(self.data_file, 'w') as df:
+            with open(self.data_file, "w") as df:
                 json.dump({}, df)
         else:
-            with open(self.data_file, 'r') as df:
+            with open(self.data_file, "r") as df:
                 self.data = json.load(df)
 
     def _save_data(self):
-        with open(self.data_file, 'w') as df:
+        with open(self.data_file, "w") as df:
             json.dump(self.data, df, indent=4)
 
     def create_task(self, task_data):
@@ -33,7 +33,7 @@ class RamStorage:
             "status": "pending",
             "data": task_data,
             "log": [],
-            "result": None
+            "result": None,
         }
 
         self._save_data()

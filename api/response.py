@@ -2,10 +2,7 @@ import json
 
 
 def make_response(data):
-    return {
-        "status": "success",
-        "data": data
-    }
+    return {"status": "success", "data": data}
 
 
 def send_response(handler, status_code, response_data):

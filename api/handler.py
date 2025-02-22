@@ -3,20 +3,29 @@ from http.server import BaseHTTPRequestHandler
 from http import HTTPStatus
 from json import JSONDecodeError
 
-from api.errors import TaskNotFoundError, handle_error, QueryNotFoundError, InvalidTaskDataError
+from api.errors import (
+    TaskNotFoundError,
+    handle_error,
+    QueryNotFoundError,
+    InvalidTaskDataError,
+)
 from repository.task_repository import TaskRepositoryIml
 from api.response import make_response, send_response
-from usecase.task_usecases import CreateTaskUseCase, GetTaskStatusUseCase, GetTaskResultUseCase
+from usecase.task_usecases import (
+    CreateTaskUseCase,
+    GetTaskStatusUseCase,
+    GetTaskResultUseCase,
+)
 
 
 class RequestHandler(BaseHTTPRequestHandler):
-    def __init__(self, *args, **kwargs):
-        self.task_repository = TaskRepositoryIml()
+    def __init__(self, task_repository, *args, **kwargs):
+        self.task_repository = task_repository
         super().__init__(*args, **kwargs)
 
     def do_POST(self):
         try:
-            content_len = int(self.headers.get('Content-Length', 0))
+            content_len = int(self.headers.get("Content-Length", 0))
             post_data = self.rfile.read(content_len).decode("utf-8")
 
             try:
@@ -32,10 +41,9 @@ class RequestHandler(BaseHTTPRequestHandler):
             use_case = CreateTaskUseCase(self.task_repository)
             task = use_case.execute(description)
 
-            response_data = make_response({
-                "task_id": task.id,
-                "message": "Task created"
-            })
+            response_data = make_response(
+                {"task_id": task.id, "message": "Task created"}
+            )
 
             send_response(self, HTTPStatus.CREATED, response_data)
 
@@ -47,7 +55,7 @@ class RequestHandler(BaseHTTPRequestHandler):
     # query sample: curl -X GET -d "action=status&task_id=777" http://localhost:8080/
     def do_GET(self):
         try:
-            http_query = self.path.split('/')
+            http_query = self.path.split("/")
             task_id = http_query[-1]
             query_type = http_query[-2]
 
@@ -60,18 +68,18 @@ class RequestHandler(BaseHTTPRequestHandler):
             if query_type == "status":
                 use_case = GetTaskStatusUseCase(self.task_repository)
                 task = use_case.execute(task_id)
-                response_data = make_response({
-                    "task_id": task_id,
-                    "task_status": task.status,
-                    "task_log": task.log,
-                    "task_result": task.result
-                })
+                response_data = make_response(
+                    {
+                        "task_id": task_id,
+                        "task_status": task.status,
+                        "task_log": task.log,
+                        "task_result": task.result,
+                    }
+                )
             elif query_type == "result":
                 use_case = GetTaskResultUseCase(self.task_repository)
                 task_result = use_case.execute(task_id)
-                response_data = make_response({
-                    "task_result": task_result
-                })
+                response_data = make_response({"task_result": task_result})
             else:
                 raise QueryNotFoundError(f"No Query:[{query_type}] Found")
 
