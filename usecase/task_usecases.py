@@ -24,5 +24,5 @@ class GetTaskStatusUseCase(TaskUseCase):
 
 
 class GetTaskResultUseCase(TaskUseCase):
-    def execute(self, task_id: str) -> Task:
-        return self.task_repository.get_task(task_id)["result"]
+    def execute(self, task_id: str) -> str:
+        return self.task_repository.get_task(task_id).result

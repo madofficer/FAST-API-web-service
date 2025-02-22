@@ -21,7 +21,7 @@ class TaskWorker:
             sleep(3)
             task.log.append(f"iter {i} running")
             self.task_repository.update_task(task)
-        self.task_repository.append(f'Executed at {strftime("%H:%M:%S", localtime())}')
+        task.log.append(f'Executed at {strftime("%H:%M:%S", localtime())}')
 
         task.status = "Completed"
         task.result = "panda"

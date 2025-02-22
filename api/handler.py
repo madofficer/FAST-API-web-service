@@ -9,7 +9,6 @@ from api.errors import (
     QueryNotFoundError,
     InvalidTaskDataError,
 )
-from repository.task_repository import TaskRepositoryIml
 from api.response import make_response, send_response
 from usecase.task_usecases import (
     CreateTaskUseCase,
