@@ -1,5 +1,7 @@
 from dataclasses import dataclass
+
 import yaml
+
 
 @dataclass
 class Config:
@@ -10,7 +12,7 @@ class Config:
         return self.HOST, self.PORT
 
 
-def parse_config(path='config.yaml') -> Config:
+def parse_config(path='api/config/config.yaml') -> Config:
     with open(path, 'r') as f:
         config = yaml.safe_load(f)
         config = Config(**config)
