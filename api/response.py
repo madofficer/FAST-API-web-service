@@ -9,7 +9,7 @@ class Response:
     message: Optional[str] = None
 
     def get_response(self) -> dict:
-        return {"data" : self.data, "message": self.message}
+        return {"data": self.data, "message": self.message}
 
 
 def send_response(handler, status_code, response_data):
@@ -17,6 +17,7 @@ def send_response(handler, status_code, response_data):
     handler.send_header("Content-type", "application/json")
     handler.end_headers()
     handler.wfile.write(json.dumps(response_data, indent=4).encode())
+
 
 # if __name__ == "__main__":
 #     x = Response(

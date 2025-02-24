@@ -40,9 +40,7 @@ class RequestHandler(BaseHTTPRequestHandler):
             use_case = CreateTaskUseCase(self.task_repository)
             task = use_case.execute(description)
 
-            response_data = Response(
-                {"task_id": task.id}
-            ).data
+            response_data = Response({"task_id": task.id}).data
 
             send_response(self, HTTPStatus.CREATED, response_data)
 
