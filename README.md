@@ -6,7 +6,7 @@
 5) fake task worker with `threading`
 6) code formated with black
 7) HTTP API Specs with
-[swagger 2.0](doc/openAPI3.json)
+[openAPI3](doc/openAPI3.json)
 
 ## TODO
 1) non fake worker
