@@ -1,6 +1,6 @@
-from uuid import uuid4
 from domain.interfaces import TaskRepository
 from domain.task import Task
+from repository.utils import gen_uuid
 
 
 class TaskRepositoryIml(TaskRepository):
@@ -8,7 +8,7 @@ class TaskRepositoryIml(TaskRepository):
         self.tasks = {}
 
     def create_task(self, description: str) -> Task:
-        task_id = str(uuid4())
+        task_id = gen_uuid()
         task = Task(id=task_id, description=description)
         self.tasks[task.id] = task
         return task
@@ -18,3 +18,6 @@ class TaskRepositoryIml(TaskRepository):
 
     def update_task(self, task: Task) -> None:
         self.tasks[task.id] = task
+
+    def delete_task(self, task: Task) -> None:
+        NotImplementedError()
