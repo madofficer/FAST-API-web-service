@@ -64,4 +64,11 @@ paths:
                 type: string
         400:
           description: Task not found
+          schema:
+            type: object
+            properties:
+              message:
+                type: string
+
+
     

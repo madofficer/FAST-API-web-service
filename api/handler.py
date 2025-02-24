@@ -41,8 +41,8 @@ class RequestHandler(BaseHTTPRequestHandler):
             task = use_case.execute(description)
 
             response_data = make_response(
-                {"task_id": task.id, "message": "Task created"}
-            )
+                {"task_id": task.id}
+            ).to_json()
 
             send_response(self, HTTPStatus.CREATED, response_data)
 
@@ -51,7 +51,6 @@ class RequestHandler(BaseHTTPRequestHandler):
         except Exception as err:
             handle_error(self, err)
 
-    # query sample: curl -X GET -d "action=status&task_id=777" http://localhost:8080/
     def do_GET(self):
         try:
             http_query = self.path.split("/")
@@ -65,20 +64,9 @@ class RequestHandler(BaseHTTPRequestHandler):
                 raise TaskNotFoundError(f"No Task:[{task_id}] Found")
 
             if query_type == "status":
-                use_case = GetTaskStatusUseCase(self.task_repository)
-                task = use_case.execute(task_id)
-                response_data = make_response(
-                    {
-                        "task_id": task_id,
-                        "task_status": task.status,
-                        "task_log": task.log,
-                        "task_result": task.result,
-                    }
-                )
+                response_data = self._get_task_status(task_id)
             elif query_type == "result":
-                use_case = GetTaskResultUseCase(self.task_repository)
-                task_result = use_case.execute(task_id)
-                response_data = make_response({"task_result": task_result})
+                response_data = self._get_task_result(task_id)
             else:
                 raise QueryNotFoundError(f"No Query:[{query_type}] Found")
 
@@ -87,3 +75,21 @@ class RequestHandler(BaseHTTPRequestHandler):
 
         except Exception as err:
             handle_error(self, err)
+
+    def _get_task_status(self, task_id) -> json:
+        use_case = GetTaskStatusUseCase(self.task_repository)
+        task = use_case.execute(task_id)
+        response_data = make_response(
+            {
+                "task_status": task.status,
+                "task_log": task.log,
+                "task_result": task.result,
+            }
+        ).to_json()
+        return response_data
+
+    def _get_task_result(self, task_id):
+        use_case = GetTaskResultUseCase(self.task_repository)
+        task_result = use_case.execute(task_id)
+        response_data = make_response({"task_result": task_result}).to_json()
+        return response_data

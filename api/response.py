@@ -1,4 +1,13 @@
+from dataclasses import dataclass, asdict
 import json
+
+
+@dataclass
+class Response:
+    data: object
+
+    def to_join(self):
+        return json.dumps(asdict(self.data))
 
 
 def make_response(data):
