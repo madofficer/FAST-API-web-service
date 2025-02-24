@@ -5,8 +5,8 @@
 4) Security is not the option
 5) fake task worker with `threading`
 6) code formated with black
-7) HTTP API Specs with `Swagger 2.0` available in
-8) `/doc/swagger.yaml`
+7) HTTP API Specs with
+[swagger 2.0](doc/swagger.yaml)
 
 ## TODO
 1) non fake worker
