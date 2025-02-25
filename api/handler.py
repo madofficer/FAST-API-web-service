@@ -91,7 +91,6 @@ class RequestHandler(BaseHTTPRequestHandler):
             {
                 "task_status": task.status,
                 "task_log": task.log,
-                "task_result": task.result,
             }
         )
         return response_data

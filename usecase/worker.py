@@ -14,7 +14,7 @@ class TaskWorker:
         if not task:
             return
 
-        task.status = "running"
+        task.status = "in_progress"
         task.log.append(f"Execution started at {strftime("%H:%M:%S", localtime())}")
 
         for i in range(1, 6):
@@ -23,7 +23,7 @@ class TaskWorker:
             self.task_repository.update_task(task)
         task.log.append(f'Executed at {strftime("%H:%M:%S", localtime())}')
 
-        task.status = "Completed"
+        task.status = "ready"
         task.result = "panda"
         self.task_repository.update_task(task)
 
