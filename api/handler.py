@@ -3,7 +3,6 @@ import os
 from http.server import BaseHTTPRequestHandler
 from http import HTTPStatus
 from json import JSONDecodeError
-from textwrap import indent
 
 from api.errors import (
     TaskNotFoundError,
