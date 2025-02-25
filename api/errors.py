@@ -28,6 +28,10 @@ class QueryNotFoundError(BaseTaskNotFoundError):
     pass
 
 
+class DirectoryNotFound(BaseTaskNotFoundError):
+    pass
+
+
 class InvalidTaskDataError(BaseInvalidDataError):
     pass
 

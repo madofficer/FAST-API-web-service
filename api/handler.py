@@ -25,25 +25,29 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_POST(self):
         try:
-            content_len = int(self.headers.get("Content-Length", 0))
-            post_data = self.rfile.read(content_len).decode("utf-8")
+            if self.path == '/task':
 
-            try:
-                task_data = json.loads(post_data)
-                description = task_data.get("description")
+                content_len = int(self.headers.get("Content-Length", 0))
+                post_data = self.rfile.read(content_len).decode("utf-8")
 
-                if not description:
-                    raise InvalidTaskDataError("Description for task required")
+                try:
+                    task_data = json.loads(post_data)
+                    description = task_data.get("description")
 
-            except json.JSONDecodeError:
-                raise InvalidTaskDataError("Invalid json data")
+                    if not description:
+                        raise InvalidTaskDataError("Description for task required")
 
-            use_case = CreateTaskUseCase(self.task_repository)
-            task = use_case.execute(description)
+                except json.JSONDecodeError:
+                    raise InvalidTaskDataError("Invalid json data")
 
-            response_data = Response({"task_id": task.id}).data
+                use_case = CreateTaskUseCase(self.task_repository)
+                task = use_case.execute(description)
 
-            send_response(self, HTTPStatus.CREATED, response_data)
+                response_data = Response({"task_id": task.id}).data
+
+                send_response(self, HTTPStatus.CREATED, response_data)
+            else:
+                raise QueryNotFoundError("No such path for POST")
 
         except JSONDecodeError:
             handle_error(self, ValueError("Invalid JSON data"))
@@ -99,5 +103,10 @@ class RequestHandler(BaseHTTPRequestHandler):
         return response_data
 
     def _get_doc(self, path="doc/openAPI3.json"):
-        if os.path.exists(path):
-            send_response(self, HTTPStatus.OK, path)
+        try:
+            if os.path.exists(path):
+                send_response(self, HTTPStatus.OK, path)
+            else:
+                raise QueryNotFoundError("")
+        except QueryNotFoundError as err:
+            handle_error(self, err)

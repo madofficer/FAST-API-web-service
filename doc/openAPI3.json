@@ -12,7 +12,7 @@
     }
   ],
   "paths": {
-    "/": {
+    "/task": {
       "post": {
         "summary": "Create a new task",
         "description": "This endpoint creates a new task by providing a description.",
