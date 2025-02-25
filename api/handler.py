@@ -1,7 +1,9 @@
 import json
+import os
 from http.server import BaseHTTPRequestHandler
 from http import HTTPStatus
 from json import JSONDecodeError
+from textwrap import indent
 
 from api.errors import (
     TaskNotFoundError,
@@ -52,6 +54,11 @@ class RequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         try:
             http_query = self.path.split("/")
+
+            if http_query[-1] == "doc":
+                self._get_doc()
+                return
+
             task_id = http_query[-1]
             query_type = http_query[-2]
 
@@ -91,3 +98,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         task_result = use_case.execute(task_id)
         response_data = Response({"task_result": task_result})
         return response_data
+
+    def _get_doc(self, path="doc/openAPI3.json"):
+        if os.path.exists(path):
+            send_response(self, HTTPStatus.OK, path)
