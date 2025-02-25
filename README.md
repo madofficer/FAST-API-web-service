@@ -14,7 +14,7 @@
 3) tests
 
 ## PS
-query sample: `-X POST -d {"description": "sth to describe"} http://localhost:8080/`
+query sample: `-X POST -d {"description": "sth to describe"} http://localhost:8080/task`
 
 _"description" key required_ 
 
