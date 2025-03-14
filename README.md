@@ -1,2 +1,3 @@
 # Backend home task
-1) HTTP server with FAST API
+**Async HTTP web service with FAST API**
+Run server with `fastapi dev source/`
