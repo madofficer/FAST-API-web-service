@@ -7,6 +7,8 @@ class Settings(BaseSettings):
     DB_PORT: int
     DB_USER: str
     DB_PASS: str
+    JWT_SECRET: str
+    JWT_ALGORITHM: str
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
