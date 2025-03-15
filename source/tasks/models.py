@@ -3,16 +3,12 @@ from sqlmodel import SQLModel, Field, Column
 import sqlalchemy.dialects.postgresql as pg
 
 
-
 class Task(SQLModel, table=True):
     __tablename__ = "tasks"
 
     uuid: uuid_pkg.UUID = Field(
         sa_column=Column(
-            pg.UUID,
-            nullable=False,
-            primary_key=True,
-            default=uuid_pkg.uuid4
+            pg.UUID, nullable=False, primary_key=True, default=uuid_pkg.uuid4
         )
     )
     title: str
@@ -25,9 +21,9 @@ class Task(SQLModel, table=True):
     class Config:
         scheme_extra = {
             "example": {
-                    "uuid": "some_uuid",
-                    "title": "Task Master",
-                    "description": "Challenge",
-                    "status": "pending"
+                "uuid": "some_uuid",
+                "title": "Task Master",
+                "description": "Challenge",
+                "status": "pending",
             }
         }

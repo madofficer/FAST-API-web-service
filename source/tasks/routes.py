@@ -16,7 +16,9 @@ async def get_all_tasks(session: AsyncSession = Depends(get_session)):
 
 
 @task_router.post("/", status_code=status.HTTP_201_CREATED, response_model=Task)
-async def create_task(task_data: TaskCreateModel, session: AsyncSession = Depends(get_session)) -> dict:
+async def create_task(
+    task_data: TaskCreateModel, session: AsyncSession = Depends(get_session)
+) -> dict:
     new_task = await task_service.create_task(task_data, session)
 
     return new_task
@@ -30,12 +32,15 @@ async def get_task(task_uuid: str, session: AsyncSession = Depends(get_session))
         print("Done")
         return task
     else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail="Task not Found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Task not Found"
+        )
+
 
 @task_router.patch("/task_uuid", status_code=status.HTTP_501_NOT_IMPLEMENTED)
 async def update_task(task_uuid: str, session: AsyncSession = Depends(get_session)):
     NotImplementedError()
+
 
 @task_router.delete("/{task_uuid}", status_code=status.HTTP_204_NO_CONTENT)
 async def delete_task(task_uuid: str, session: AsyncSession = Depends(get_session)):
@@ -44,5 +49,6 @@ async def delete_task(task_uuid: str, session: AsyncSession = Depends(get_sessio
         print("Task deleted")
         return {"Task deleted"}
     else:
-        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,
-                        detail="Task not Found")
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND, detail="Task not Found"
+        )

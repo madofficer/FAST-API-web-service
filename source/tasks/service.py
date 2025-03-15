@@ -21,17 +21,16 @@ class TaskService:
 
     async def create_task(self, task_data: TaskCreateModel, session: AsyncSession):
         task_data_dict = task_data.model_dump()
-        new_task = Task(
-            **task_data_dict
-        )
+        new_task = Task(**task_data_dict)
 
         session.add(new_task)
         await session.commit()
 
         return new_task
 
-
-    async def update_task(self, task_uuid: str, upd_data: TaskCreateModel, session: AsyncSession):
+    async def update_task(
+        self, task_uuid: str, upd_data: TaskCreateModel, session: AsyncSession
+    ):
         task_to_upd = self.get_task(task_uuid, session)
         if task_to_upd:
             upd_data_dict = upd_data.model_dump()

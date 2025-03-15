@@ -8,10 +8,7 @@ class Settings(BaseSettings):
     DB_USER: str
     DB_PASS: str
 
-    model_config = SettingsConfigDict(
-        env_file=".env",
-        extra="ignore"
-    )
+    model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
 
 Config = Settings()

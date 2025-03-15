@@ -11,13 +11,13 @@ class Task(BaseModel):
     class Config:
         scheme_extra = {
             "example": {
-                    "id": 1,
-                    "title": "Task Master",
-                    "description": "Challenge",
-                    "status": "pending"
-
+                "id": 1,
+                "title": "Task Master",
+                "description": "Challenge",
+                "status": "pending",
             }
         }
+
 
 class TaskCreateModel(BaseModel):
     title: str
