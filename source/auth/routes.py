@@ -40,34 +40,35 @@ async def login_user(login_data: UserLoginModel, session: AsyncSession = Depends
 
     user = await user_service.get_user(username, session)
 
-    if user:
+    if user and PasswordCheck.verify_password(password, user.password_hash):
         user_data = {
             "username": username,
             "user_uuid": str(user.uuid)
         }
 
-        if PasswordCheck.verify_password(password, user.password_hash):
-            access_token = create_access_token(
-                user_data=user_data
-            )
+        # if PasswordCheck.verify_password(password, user.password_hash):
+        access_token = create_access_token(
+            user_data=user_data
+        )
 
-            refresh_token = create_access_token(
-                user_data=user_data,
-                refresh=True,
-                expiry=timedelta(days=2)
-            )
+        refresh_token = create_access_token(
+            user_data=user_data,
+            refresh=True,
+            expiry=timedelta(days=2)
+        )
 
-            return JSONResponse(
-                content={
-                    "message": "Logged in successful",
-                    "access_token": access_token,
-                    "refresh_token": refresh_token,
-                    "user": {
-                        "username": user.username,
-                        "uuid": str(user.uuid)
-                    }
+        return JSONResponse(
+            content={
+                "message": "Logged in successful",
+                "access_token": access_token,
+                "refresh_token": refresh_token,
+                "user": {
+                    "username": user.username,
+                    "uuid": str(user.uuid)
                 }
-            )
+            }
+        )
+        # todo: custom errors [auth error]
     else:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
