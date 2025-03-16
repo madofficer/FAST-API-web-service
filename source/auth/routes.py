@@ -44,9 +44,8 @@ async def login_user(login_data: UserLoginModel, session: AsyncSession = Depends
         user_data = {
             "username": username,
             "user_uuid": str(user.uuid)
-
         }
-        # print(PasswordCheck.verify_password(password, user.password_hash))
+
         if PasswordCheck.verify_password(password, user.password_hash):
             access_token = create_access_token(
                 user_data=user_data
@@ -69,8 +68,8 @@ async def login_user(login_data: UserLoginModel, session: AsyncSession = Depends
                     }
                 }
             )
-        else:
-            raise HTTPException(
-                status_code=status.HTTP_401_UNAUTHORIZED,
-                detail="Invalid credentials"
-            )
+    else:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid credentials"
+        )
