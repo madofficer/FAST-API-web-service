@@ -23,31 +23,30 @@ class PasswordCheck:
         return password_context.verify(password, hash_)
 
 
-def create_access_token(user_data: dict, expiry: timedelta = None, refresh: bool = False):
+def create_access_token(
+    user_data: dict, expiry: timedelta = None, refresh: bool = False
+):
     payload = {
         "user": user_data,
-        "exp": datetime.now() + (expiry if expiry else timedelta(seconds=ACCESS_TOKEN_EXPIRY)),
+        "exp": datetime.now()
+        + (expiry if expiry else timedelta(seconds=ACCESS_TOKEN_EXPIRY)),
         "jti": str(uuid4()),
-        "refresh": refresh
+        "refresh": refresh,
     }
 
     token = jwt.encode(
-        payload=payload,
-        key=Config.JWT_SECRET,
-        algorithm=Config.JWT_ALGORITHM
+        payload=payload, key=Config.JWT_SECRET, algorithm=Config.JWT_ALGORITHM
     )
 
     return token
 
+
 def decode_token(token: str) -> dict:
     try:
         token_data = jwt.decode(
-            jwt=token,
-            key=Config.JWT_SECRET,
-            algorithms=[Config.JWT_ALGORITHM]
+            jwt=token, key=Config.JWT_SECRET, algorithms=[Config.JWT_ALGORITHM]
         )
         return token_data
     except PyJWTError as err:
         logging.exception(err)
         return None
-

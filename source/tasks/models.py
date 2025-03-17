@@ -1,19 +1,23 @@
-import uuid as uuid_pkg
-from sqlmodel import SQLModel, Field, Column
+from uuid import UUID, uuid4
+from typing import Optional
+
+from sqlmodel import SQLModel, Field, Column, Relationship
 import sqlalchemy.dialects.postgresql as pg
+from source.auth import models
 
 
 class Task(SQLModel, table=True):
     __tablename__ = "tasks"
 
-    uuid: uuid_pkg.UUID = Field(
-        sa_column=Column(
-            pg.UUID, nullable=False, primary_key=True, default=uuid_pkg.uuid4
-        )
+    uuid: UUID = Field(
+        sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid4)
     )
     title: str
     description: str
     status: str
+    result: str = Field(default=None)
+    user_uuid: Optional[UUID] = Field(default=None, foreign_key="users.uuid")
+    user: Optional["models.User"] = Relationship(back_populates="tasks")
 
     def __repr__(self):
         return f"<Task {self.title}>"

@@ -7,6 +7,7 @@ class Task(BaseModel):
     title: str
     description: str
     status: str
+    result: str
 
     class Config:
         scheme_extra = {
