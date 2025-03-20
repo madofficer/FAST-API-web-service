@@ -5,4 +5,11 @@ Run database with `docker run --name postgres-fastapi -e POSTGRES_PASSWORD=postg
 
 Run server with `fastapi dev source/` or `fastapi run source/`
 
-_TODO : docker-compose_
+**Use Docker**
+-
+Create `db/password.txt` and make sure your `.env` have `DB_HOST=db`
+
+Run 
+- 
+- `docker-compose build`
+- `docker-compose up`
