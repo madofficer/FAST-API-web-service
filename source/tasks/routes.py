@@ -21,7 +21,7 @@ async def get_all_tasks(
     return tasks
 
 
-@task_router.get("/user", response_model=List[Task])
+@task_router.get("/all", response_model=List[Task])
 async def get_all_user_tasks(
     session: AsyncSession = Depends(get_session),
     credentials: dict = Depends(access_token_bearer),
