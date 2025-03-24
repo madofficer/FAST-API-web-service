@@ -5,7 +5,7 @@ from pydantic import BaseModel
 class Task(BaseModel):
     uuid: uuid.UUID
     title: str
-    description: str
+    code: str
     status: str
     result: str
 
@@ -22,5 +22,5 @@ class Task(BaseModel):
 
 class TaskCreateModel(BaseModel):
     title: str
-    description: str
+    code: str
     status: str

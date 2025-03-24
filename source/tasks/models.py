@@ -13,7 +13,7 @@ class Task(SQLModel, table=True):
         sa_column=Column(pg.UUID, nullable=False, primary_key=True, default=uuid4)
     )
     title: str
-    description: str
+    code: str
     status: str
     result: str = Field(default=None)
     user_uuid: Optional[UUID] = Field(default=None, foreign_key="users.uuid")
