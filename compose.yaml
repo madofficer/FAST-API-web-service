@@ -11,35 +11,73 @@ services:
   server:
     build:
       context: .
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:${db-password}@db:5432/postgres
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
     ports:
-      - 8000:8000
+      - "8000:8000"
     depends_on:
-       db:
-         condition: service_healthy
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
 
   db:
-     image: postgres
-     restart: always
-     user: postgres
-     secrets:
-       - db-password
-     volumes:
-       - db-data:/var/lib/postgresql/data
-     environment:
-       - POSTGRES_DB=postgres
-       - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
-     ports:
-      - 5432:5432
-     expose:
-       - 5432
-     healthcheck:
-       test: [ "CMD", "pg_isready" ]
-       interval: 10s
-       timeout: 5s
-       retries: 5
+    image: postgres
+    restart: always
+    user: postgres
+    secrets:
+      - db-password
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_PASSWORD_FILE=/run/secrets/db-password
+    ports:
+      - "5432:5432"
+    expose:
+      - 5432
+    healthcheck:
+      test: [ "CMD", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    environment:
+      - RABBITMQ_DEFAULT_USER=guest
+      - RABBITMQ_DEFAULT_PASS=guest
+    ports:
+      - "5673:5673"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  worker:
+    build: .
+    command: python -m processor.consumer
+    environment:
+      - DATABASE_URL=postgresql+asyncpg://postgres:${db-password}@db:5432/postgres
+      - RABBITMQ_URL=amqp://guest:guest@rabbitmq:5672/
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    depends_on:
+      db:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+
+
 volumes:
- db-data:
+  postgres_data:
+  rabbitmq_data:
 secrets:
- db-password:
-   file: db/password.txt
+  db-password:
+    file: db/password.txt
 

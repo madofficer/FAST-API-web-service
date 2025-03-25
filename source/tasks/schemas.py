@@ -23,4 +23,3 @@ class Task(BaseModel):
 class TaskCreateModel(BaseModel):
     title: str
     code: str
-    status: str

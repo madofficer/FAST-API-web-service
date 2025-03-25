@@ -1,11 +1,18 @@
 from sqlmodel.ext.asyncio.session import AsyncSession
 from sqlmodel import select, desc
+
+from broker.RabbitMQ import RabbitMQService
+from source.config import Config
 from source.tasks.models import Task
 from source.tasks.schemas import TaskCreateModel
 from uuid import UUID
 
 
 class TaskService:
+
+    def __init__(self):
+        self.rabbit = RabbitMQService(Config.RABBITMQ_URL)
+
     async def get_all_tasks(self, session: AsyncSession):
         statement = select(Task).order_by(desc(Task.title))
 
@@ -36,19 +43,22 @@ class TaskService:
         task_data_dict = task_data.model_dump()
         new_task = Task(**task_data_dict)
         new_task.user_uuid = user_uuid
+        new_task.status = "pending"
 
         session.add(new_task)
         await session.commit()
+        await session.refresh(new_task)
+
+        await self.rabbit.publish_task(str(new_task.uuid))
 
         return new_task
 
     async def update_task(
-        self, task_uuid: str, upd_data: TaskCreateModel, session: AsyncSession
+        self, task_uuid: str, upd_data: dict, session: AsyncSession
     ):
         task_to_upd = self.get_task(task_uuid, session)
         if task_to_upd:
-            upd_data_dict = upd_data.model_dump()
-            for key, val in upd_data_dict.items():
+            for key, val in upd_data.items():
                 setattr(task_to_upd, key, val)
             await session.commit()
             return task_to_upd

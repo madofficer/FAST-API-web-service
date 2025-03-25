@@ -15,7 +15,7 @@ class Task(SQLModel, table=True):
     title: str
     code: str
     status: str
-    result: str = Field(default=None)
+    result: str | None = Field(default=None)
     user_uuid: Optional[UUID] = Field(default=None, foreign_key="users.uuid")
     user: Optional["models.User"] = Relationship(back_populates="tasks")
 
